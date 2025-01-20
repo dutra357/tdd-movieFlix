@@ -1,8 +1,10 @@
 package com.devsuperior.movieflix.services;
 
 import com.devsuperior.movieflix.dto.MovieDetailsDTO;
+import com.devsuperior.movieflix.dto.ReviewDTO;
 import com.devsuperior.movieflix.entities.Movie;
 import com.devsuperior.movieflix.repositories.MovieRepository;
+import com.devsuperior.movieflix.repositories.ReviewRepository;
 import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,8 +18,10 @@ import java.util.List;
 public class MovieService {
 
     private final MovieRepository repository;
-    public MovieService(MovieRepository repository) {
+    private final ReviewRepository reviewRepository;
+    public MovieService(MovieRepository repository, ReviewRepository reviewRepository) {
         this.repository = repository;
+        this.reviewRepository = reviewRepository;
     }
 
     public Page<MovieDetailsDTO> findAllPaged(String id, Pageable pageable) {
@@ -34,5 +38,9 @@ public class MovieService {
         Movie movie = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Movie not found."));
         return new MovieDetailsDTO(movie);
+    }
+
+    public List<ReviewDTO> findReviewByMovieId(Long id) {
+        return reviewRepository.findByMovieId(id).stream().map(ReviewDTO::new).toList();
     }
 }
