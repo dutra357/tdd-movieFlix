@@ -1,6 +1,6 @@
 package com.devsuperior.movieflix.services;
 
-import com.devsuperior.movieflix.dto.MovieCardDTO;
+import com.devsuperior.movieflix.dto.MovieDetailsDTO;
 import com.devsuperior.movieflix.entities.Movie;
 import com.devsuperior.movieflix.repositories.MovieRepository;
 import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
@@ -20,19 +20,19 @@ public class MovieService {
         this.repository = repository;
     }
 
-    public Page<MovieCardDTO> findAllPaged(String id, Pageable pageable) {
+    public Page<MovieDetailsDTO> findAllPaged(String id, Pageable pageable) {
         PageRequest page = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("title"));
 
         if (id.equals("")) {
-            return repository.findAll(page).map(MovieCardDTO::new);
+            return repository.findAll(page).map(MovieDetailsDTO::new);
         } else {
-            return repository.findByGenreId(Long.parseLong(id), page).map(MovieCardDTO::new);
+            return repository.findByGenreId(Long.parseLong(id), page).map(MovieDetailsDTO::new);
         }
     }
 
-    public MovieCardDTO findById(Long id) {
+    public MovieDetailsDTO findById(Long id) {
         Movie movie = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Movie not found."));
-        return new MovieCardDTO(movie);
+        return new MovieDetailsDTO(movie);
     }
 }
