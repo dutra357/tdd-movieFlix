@@ -25,9 +25,13 @@ public class MovieService {
     }
 
     public Page<MovieDetailsDTO> findAllPaged(String id, Pageable pageable) {
-        PageRequest page = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("title"));
+        PageRequest page = PageRequest.of(pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by("title"));
 
         if (id.equals("")) {
+            //Para listar todos caso não seja enviado parâmetro
+            //Sendo '0' retornará uma lista vazia, dado não haver registro.
             return repository.findAll(page).map(MovieDetailsDTO::new);
         } else {
             return repository.findByGenreId(Long.parseLong(id), page).map(MovieDetailsDTO::new);
